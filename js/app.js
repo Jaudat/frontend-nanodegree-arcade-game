@@ -2,8 +2,17 @@
 var gameboard = {
     NUM_OF_ROWS: 6,
     NUM_OF_COLS: 5,
-    ROW_WIDTH: 70,
-    COL_WIDTH: 101
+    // ROW_ZERO: 0,
+    ROW_ONE: 60,
+    ROW_TWO: 140,
+    ROW_THREE: 225,
+    ROW_FOUR: 310,
+    ROW_FIVE: 395,
+    COL_ZERO: 0,
+    COL_ONE: 101,
+    COL_TWO: 202,
+    COL_THREE: 303,
+    COL_FIVE: 404
 }; 
 
 // Enemies our player must avoid
@@ -14,8 +23,9 @@ var Enemy = function() {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-    this.x = 0 * gameboard.COL_WIDTH; //column
-    this.y = 3 * gameboard.ROW_WIDTH; //row
+    this.x = gameboard.COL_ZERO ; //column
+    this.y = this.getStartingRow(); //row
+    this.movement = this.chooseMovementSpeed();
 };
 
 // Update the enemy's position, required method for game
@@ -36,7 +46,20 @@ Enemy.prototype.render = function() {
 Enemy.prototype.getStartingRow = function() {
     var row1 = 1;
     var row2 = 4;
-    return Math.floor( Math.random()*(max-min) ) + min
+    var rand =  Math.floor( Math.random()*(max-min) ) + min
+
+    switch(rand) {
+        case 1:
+            return gameboard.ROW_ONE;
+        case 2:
+            return gameboard.ROW_TWO;
+        case 3:
+           return gameboard.ROW_THREE
+    }
+};
+
+Enemy.prototype.chooseMovementSpeed = function() {
+
 };
 
 // Now write your own player class
