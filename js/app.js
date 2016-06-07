@@ -59,6 +59,12 @@ Enemy.prototype.getStartingRow = function() {
     }
 };
 
+//Detects the collision and detection of the player with the enemy and then restarts the game 
+Enemy.prototype.handleCollision = function() {
+
+};
+
+//arbitrarily calculates the movement speed of the enemy from a range
 Enemy.prototype.chooseMovementSpeed = function() {
     var min = 30;
     var max = 100;
