@@ -1,18 +1,7 @@
 //Enums containing the values of various constants used throughout the cpde
 var gameboard = {
-    NUM_OF_ROWS: 6,
-    NUM_OF_COLS: 5,
-    // ROW_ZERO: 0,
-    ROW_ONE: 60,
-    ROW_TWO: 140,
-    ROW_THREE: 225,
-    ROW_FOUR: 310,
-    ROW_FIVE: 395,
-    COL_ZERO: 0,
-    COL_ONE: 101,
-    COL_TWO: 202,
-    COL_THREE: 303,
-    COL_FOUR: 404
+    ROWS: [0, 60, 140, 225, 310, 395],
+    COLS: [0, 101, 202, 303, 404]
 }; 
 
 // Enemies our player must avoid
@@ -23,7 +12,7 @@ var Enemy = function() {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-    this.x = gameboard.COL_ZERO ; //column
+    this.x = gameboard.COLS[0] ; //column
     this.y = this.getStartingRow(); //row
     this.speed = this.chooseMovementSpeed();
 };
@@ -49,14 +38,7 @@ Enemy.prototype.getStartingRow = function() {
     var max = 4;
     var rand =  Math.floor( Math.random()*(max-min) ) + min;
 
-    switch(rand) {
-        case 1:
-            return gameboard.ROW_ONE;
-        case 2:
-            return gameboard.ROW_TWO;
-        case 3:
-           return gameboard.ROW_THREE
-    }
+    return gameboard.ROWS[rand];
 };
 
 //Detects the collision and detection of the player with the enemy and then restarts the game 
@@ -77,20 +59,57 @@ Enemy.prototype.chooseMovementSpeed = function() {
 
 var Player = function() {
     this.sprite = 'images/char-boy.png';
-    this.x = gameboard.COL_TWO; //column
-    this.y = gameboard.ROW_FIVE; //row
+    this.xIndex = 2;
+    this.yIndex = 5;
+    this.x = gameboard.COLS[2]; //column
+    this.y = gameboard.ROWS[5]; //row
 };
 
 Player.prototype.update = function() {
-    //TODO: Finish function
+    if (this.y === gameboard.ROWS[0]) {
+        this.handleWin()
+    }
 };
 
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-Player.prototype.handleInput = function() {
-    //TODO: Finish function
+Player.prototype.handleInput = function(direction) {
+    switch(direction) {
+        case 'left':
+            if (this.xIndex > 0) {
+                this.xIndex -= 1;
+                this.x = gameboard.COLS[this.xIndex];
+            }
+            break;
+        case 'right':
+            if (this.xIndex < (gameboard.COLS.length-1)) {
+                this.xIndex += 1;
+                this.x = gameboard.COLS[this.xIndex];
+            }
+            break;
+        case 'up':
+            if (this.yIndex > 0) {
+                this.yIndex -= 1;
+                this.y = gameboard.ROWS[this.yIndex];
+            }
+            break;
+        case 'down':
+            if (this.yIndex < (gameboard.ROWS.length-1)) {
+                this.yIndex += 1;
+                this.y = gameboard.ROWS[this.yIndex];
+            }
+            break;
+    }
+    this.update();
+};
+
+Player.prototype.handleWin = function() {
+    this.xIndex = 2;
+    this.yIndex = 5;
+    this.x = gameboard.COLS[2]; //column
+    this.y = gameboard.ROWS[5]; //row
 };
 
 
