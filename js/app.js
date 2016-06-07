@@ -12,7 +12,7 @@ var gameboard = {
     COL_ONE: 101,
     COL_TWO: 202,
     COL_THREE: 303,
-    COL_FIVE: 404
+    COL_FOUR: 404
 }; 
 
 // Enemies our player must avoid
@@ -25,7 +25,7 @@ var Enemy = function() {
     this.sprite = 'images/enemy-bug.png';
     this.x = gameboard.COL_ZERO ; //column
     this.y = this.getStartingRow(); //row
-    this.movement = this.chooseMovementSpeed();
+    this.speed = this.chooseMovementSpeed();
 };
 
 // Update the enemy's position, required method for game
@@ -34,6 +34,7 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    this.x += (this.speed * dt);
 };
 
 // Draw the enemy on the screen, required method for game
@@ -44,9 +45,9 @@ Enemy.prototype.render = function() {
 // Returns a random integer between min (included) and max (excluded)
 // Using Math.round() will give you a non-uniform distribution!
 Enemy.prototype.getStartingRow = function() {
-    var row1 = 1;
-    var row2 = 4;
-    var rand =  Math.floor( Math.random()*(max-min) ) + min
+    var min = 1;
+    var max = 4;
+    var rand =  Math.floor( Math.random()*(max-min) ) + min;
 
     switch(rand) {
         case 1:
@@ -59,7 +60,9 @@ Enemy.prototype.getStartingRow = function() {
 };
 
 Enemy.prototype.chooseMovementSpeed = function() {
-
+    var min = 30;
+    var max = 100;
+    return Math.floor( Math.random()*(max-min) ) + min;
 };
 
 // Now write your own player class
@@ -67,9 +70,9 @@ Enemy.prototype.chooseMovementSpeed = function() {
 // a handleInput() method.
 
 var Player = function() {
-    this.sprite = 'images/char-cat-girl.png';
-    this.x = 2 * gameboard.COL_WIDTH; //column
-    this.y = 5 * gameboard.ROW_WIDTH; //row
+    this.sprite = 'images/char-boy.png';
+    this.x = gameboard.COL_TWO; //column
+    this.y = gameboard.ROW_FIVE; //row
 };
 
 Player.prototype.update = function() {
@@ -77,7 +80,7 @@ Player.prototype.update = function() {
 };
 
 Player.prototype.render = function() {
-    //TODO: Finish function
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 Player.prototype.handleInput = function() {
