@@ -8,15 +8,7 @@ var gameboard = {
 
 // Enemies our player must avoid
 var Enemy = function() {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
-
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
-    this.sprite = 'images/enemy-bug.png';
-    this.x = gameboard.COLS[0] ; //column
-    this.y = this.getStartingRow(); //row
-    this.speed = this.chooseMovementSpeed();
+    this.spawnEnemy();
 };
 
 // Update the enemy's position, required method for game
@@ -26,18 +18,38 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     this.x += (this.speed * dt);
-    
-    //When enemy goes out of screen then make it reappear
-    if (this.x > gameboard.WIDTH) {
-        this.x = gameboard.COLS[0] ; //column
-        this.y = this.getStartingRow(); //row
-        this.speed = this.chooseMovementSpeed();
+
+    this.handleCollision();
+
+    this.spawnEnemyWhenOneGoesOffScreen();
+};
+
+//Detects the collision and detection of the player with the enemy and then restarts the game 
+Enemy.prototype.handleCollision = function() {
+//Uses the global variable for player values
+    if ( (Math.abs(this.x - player.x) < 80) && (this.y === player.y) ) {
+        // Then there is a collision and need to reposition the Player back to starting block
+        player.spawnPlayer();
     }
 };
 
-// Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+//When enemy goes out of screen then make it reappear
+Enemy.prototype.spawnEnemyWhenOneGoesOffScreen = function() {
+    if (this.x > gameboard.WIDTH) {
+        this.spawnEnemy();
+    }
+};
+
+Enemy.prototype.spawnEnemy = function() {
+    // Variables applied to each of our instances go here,
+    // we've provided one for you to get started
+
+    // The image/sprite for our enemies, this uses
+    // a helper we've provided to easily load images
+    this.sprite = 'images/enemy-bug.png';
+    this.x = gameboard.COLS[0] ; //column
+    this.y = this.getStartingRow(); //row
+    this.speed = this.chooseMovementSpeed();
 };
 
 // Returns a random integer between min (included) and max (excluded)
@@ -50,11 +62,6 @@ Enemy.prototype.getStartingRow = function() {
     return gameboard.ROWS[rand];
 };
 
-//Detects the collision and detection of the player with the enemy and then restarts the game 
-Enemy.prototype.handleCollision = function() {
-
-};
-
 //arbitrarily calculates the movement speed of the enemy from a range
 Enemy.prototype.chooseMovementSpeed = function() {
     var min = 60;
@@ -62,15 +69,17 @@ Enemy.prototype.chooseMovementSpeed = function() {
     return Math.floor( Math.random()*(max-min) ) + min;
 };
 
+// Draw the enemy on the screen, required method for game
+Enemy.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function() {
-    this.sprite = 'images/char-boy.png';
-    this.xIndex = 2;
-    this.yIndex = 5;
-    this.x = gameboard.COLS[2]; //column
-    this.y = gameboard.ROWS[5]; //row
+    this.spawnPlayer();
 };
 
 // Checks to see if player has won, and thakes the action upon winning the game
@@ -78,6 +87,20 @@ Player.prototype.update = function() {
     if (this.y === gameboard.ROWS[0]) {
         this.handleWin()
     }
+};
+
+// Action to take when the player wins
+Player.prototype.handleWin = function() {
+    this.spawnPlayer();
+};
+
+//repositions the player back to the starting position
+Player.prototype.spawnPlayer = function() {
+    this.sprite = 'images/char-boy.png';
+    this.xIndex = 2;
+    this.yIndex = 5;
+    this.x = gameboard.COLS[2]; //column
+    this.y = gameboard.ROWS[5]; //row
 };
 
 Player.prototype.render = function() {
@@ -113,14 +136,6 @@ Player.prototype.handleInput = function(direction) {
             break;
     }
     this.update();
-};
-
-// Action to take when the player wins
-Player.prototype.handleWin = function() {
-    this.xIndex = 2;
-    this.yIndex = 5;
-    this.x = gameboard.COLS[2]; //column
-    this.y = gameboard.ROWS[5]; //row
 };
 
 
