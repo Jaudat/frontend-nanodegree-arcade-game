@@ -1,7 +1,9 @@
 //Enums containing the values of various constants used throughout the cpde
 var gameboard = {
     ROWS: [0, 60, 140, 225, 310, 395],
-    COLS: [0, 101, 202, 303, 404]
+    COLS: [0, 101, 202, 303, 404],
+    WIDTH: 505,
+    HEIGHT: 606
 }; 
 
 // Enemies our player must avoid
@@ -24,6 +26,13 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     this.x += (this.speed * dt);
+    
+    //When enemy goes out of screen then make it reappear
+    if (this.x > gameboard.WIDTH) {
+        this.x = gameboard.COLS[0] ; //column
+        this.y = this.getStartingRow(); //row
+        this.speed = this.chooseMovementSpeed();
+    }
 };
 
 // Draw the enemy on the screen, required method for game
@@ -48,7 +57,7 @@ Enemy.prototype.handleCollision = function() {
 
 //arbitrarily calculates the movement speed of the enemy from a range
 Enemy.prototype.chooseMovementSpeed = function() {
-    var min = 30;
+    var min = 60;
     var max = 100;
     return Math.floor( Math.random()*(max-min) ) + min;
 };
@@ -56,7 +65,6 @@ Enemy.prototype.chooseMovementSpeed = function() {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-
 var Player = function() {
     this.sprite = 'images/char-boy.png';
     this.xIndex = 2;
@@ -65,6 +73,7 @@ var Player = function() {
     this.y = gameboard.ROWS[5]; //row
 };
 
+// Checks to see if player has won, and thakes the action upon winning the game
 Player.prototype.update = function() {
     if (this.y === gameboard.ROWS[0]) {
         this.handleWin()
@@ -75,6 +84,7 @@ Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+//Repositions the Player based on the keyboard input
 Player.prototype.handleInput = function(direction) {
     switch(direction) {
         case 'left':
@@ -105,6 +115,7 @@ Player.prototype.handleInput = function(direction) {
     this.update();
 };
 
+// Action to take when the player wins
 Player.prototype.handleWin = function() {
     this.xIndex = 2;
     this.yIndex = 5;
