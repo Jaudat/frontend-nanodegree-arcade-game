@@ -11,4 +11,4 @@ Go to the directory of this project and run the following command
 You can also use other HTTP Servers like Apache if you want
 
 ### Usage
-This is a basic Frogger game. Try to get the Player to the water without colliding with the enemies.
+This is a basic Frogger game. Use the arrow keys on the keyboard to guide the Player to the water without colliding with the Enemies.
