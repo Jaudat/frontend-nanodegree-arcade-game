@@ -8,9 +8,7 @@ var gameboard = {
 
 //Created a parent class from which the Enemy and Player classes can inherit
 var Character = function() {
-    this.sprite = "";
-    this.x = 0;
-    this.y = 0;
+    //no variables
 };
 
 // Draw either the enemy or the player on the screen, depending on the child class.
@@ -21,6 +19,7 @@ Character.prototype.render = function() {
 
 // Enemies our player must avoid
 var Enemy = function() {
+    Character.call(this);
     this.spawnEnemy();
 };
 
@@ -91,6 +90,7 @@ Enemy.prototype.chooseMovementSpeed = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function() {
+    Character.call(this); 
     this.spawnPlayer();
 };
 
